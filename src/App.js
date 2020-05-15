@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import logo from './mainStreetAuto.svg';
-import axios from 'axios';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./mainStreetAuto.svg";
+import axios from "axios";
+import "./App.css";
 
 // Toast notification dependencies
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class App extends Component {
 
     this.state = {
       vehiclesToDisplay: [],
-      buyersToDisplay: []
+      buyersToDisplay: [],
     };
 
     this.getVehicles = this.getVehicles.bind(this);
@@ -31,12 +31,18 @@ class App extends Component {
   getVehicles() {
     // axios (GET)
     // setState with response -> vehiclesToDisplay
-    axios.get('https://joes-autos.herokuapp.com/api/vehicles')
-    .then(response => {
-      toast.success('Got all vehicles')
-      this.setState({vehiclesToDisplay: response.data})
-    })
-    .catch(() => toast.error('Failed to get vehicles'))
+    axios
+      .get("https://joes-autos.herokuapp.com/api/vehicles")
+      .then((response) => {
+        this.setState({
+          vehiclesToDisplay: response.data,
+        });
+        toast.success("schweet rides bruh");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("failllllllllllllll");
+      });
   }
 
   getPotentialBuyers() {
@@ -47,12 +53,15 @@ class App extends Component {
   sellCar(id) {
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
-    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
-    .then(response => {
-      toast.success('Sold car')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to sell car'))
+    axios
+      .delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
+      .then((res) => {
+        this.setState({
+          vehiclesToDisplay: res.data.vehicles,
+        });
+        toast.success(`sold the ${make}`);
+      })
+      .catch((err) => toast.error("u failed bruh"));
   }
 
   filterByMake() {
@@ -72,12 +81,17 @@ class App extends Component {
   updatePrice(priceChange, id) {
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
-    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
-    .then(response => {
-      toast.success('Updated Price')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to update price'))
+    axios
+      .put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+      .then((res) => {
+        this.setState({
+          vehiclesToDisplay: res.data.vehicles,
+        });
+        toast.success("sucess updattee");
+      })
+      .catch((err) => {
+        toast.error("beeeeetch u faileddddd");
+      });
   }
 
   addCar() {
@@ -86,24 +100,25 @@ class App extends Component {
       model: this.model.value,
       color: this.color.value,
       year: this.year.value,
-      price: this.price.value
+      price: this.price.value,
     };
 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
-    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar)
-    .then(response => {
-      toast.success('Added car')
-      this.setState({vehiclesToDisplay: response.data.vehicles})
-    })
-    .catch(() => toast.error('Failed to add car'))
+    axios
+      .post("https://joes-autos.herokuapp.com/api/vehicles", newCar)
+      .then((response) => {
+        toast.success("Added car");
+        this.setState({ vehiclesToDisplay: response.data.vehicles });
+      })
+      .catch(() => toast.error("Failed to add car"));
   }
 
   addBuyer() {
     let newBuyer = {
       name: this.name.value,
       phone: this.phone.value,
-      address: this.address.value
+      address: this.address.value,
     };
 
     //axios (POST)
@@ -132,9 +147,9 @@ class App extends Component {
   // Do not edit the code below
   resetData(dataToReset) {
     axios
-      .get('https://joes-autos.herokuapp.com/api/' + dataToReset + '/reset')
-      .then(res => {
-        if (dataToReset === 'vehicles') {
+      .get("https://joes-autos.herokuapp.com/api/" + dataToReset + "/reset")
+      .then((res) => {
+        if (dataToReset === "vehicles") {
           this.setState({ vehiclesToDisplay: res.data.vehicles });
         } else {
           this.setState({ buyersToDisplay: res.data.buyers });
@@ -144,7 +159,7 @@ class App extends Component {
   // Do not edit the code above
 
   render() {
-    const vehicles = this.state.vehiclesToDisplay.map(v => {
+    const vehicles = this.state.vehiclesToDisplay.map((v) => {
       return (
         <div key={v.id}>
           <p>Make: {v.make}</p>
@@ -155,14 +170,14 @@ class App extends Component {
 
           <button
             className="btn btn-sp"
-            onClick={() => this.updatePrice('up', v.id)}
+            onClick={() => this.updatePrice("up", v.id)}
           >
             Increase Price
           </button>
 
           <button
             className="btn btn-sp"
-            onClick={() => this.updatePrice('down', v.id)}
+            onClick={() => this.updatePrice("down", v.id)}
           >
             Decrease Price
           </button>
@@ -176,7 +191,7 @@ class App extends Component {
       );
     });
 
-    const buyers = this.state.buyersToDisplay.map(person => {
+    const buyers = this.state.buyersToDisplay.map((person) => {
       return (
         <div key={person.id}>
           <p>Name: {person.name}</p>
@@ -206,14 +221,14 @@ class App extends Component {
 
           <button
             className="header-btn1 btn"
-            onClick={() => this.resetData('vehicles')}
+            onClick={() => this.resetData("vehicles")}
           >
             Reset Vehicles
           </button>
 
           <button
             className="header-btn2 btn"
-            onClick={() => this.resetData('buyers')}
+            onClick={() => this.resetData("buyers")}
           >
             Reset Buyers
           </button>
@@ -226,7 +241,7 @@ class App extends Component {
 
           <select
             onChange={this.filterByMake}
-            ref={selectedMake => {
+            ref={(selectedMake) => {
               this.selectedMake = selectedMake;
             }}
             className="btn-sp"
@@ -247,7 +262,7 @@ class App extends Component {
           </select>
 
           <select
-            ref={selectedColor => {
+            ref={(selectedColor) => {
               this.selectedColor = selectedColor;
             }}
             onChange={this.filterByColor}
@@ -269,13 +284,13 @@ class App extends Component {
             onChange={this.nameSearch}
             placeholder="Search by name"
             type="text"
-            ref={searchLetters => {
+            ref={(searchLetters) => {
               this.searchLetters = searchLetters;
             }}
           />
 
           <input
-            ref={searchYear => {
+            ref={(searchYear) => {
               this.searchYear = searchYear;
             }}
             className="btn-sp"
@@ -298,14 +313,14 @@ class App extends Component {
           <input
             className="btn-sp"
             placeholder="make"
-            ref={make => {
+            ref={(make) => {
               this.make = make;
             }}
           />
           <input
             className="btn-sp"
             placeholder="model"
-            ref={model => {
+            ref={(model) => {
               this.model = model;
             }}
           />
@@ -313,14 +328,14 @@ class App extends Component {
             type="number"
             className="btn-sp"
             placeholder="year"
-            ref={year => {
+            ref={(year) => {
               this.year = year;
             }}
           />
           <input
             className="btn-sp"
             placeholder="color"
-            ref={color => {
+            ref={(color) => {
               this.color = color;
             }}
           />
@@ -328,7 +343,7 @@ class App extends Component {
             type="number"
             className="btn-sp"
             placeholder="price"
-            ref={price => {
+            ref={(price) => {
               this.price = price;
             }}
           />
@@ -342,21 +357,21 @@ class App extends Component {
           <input
             className="btn-sp"
             placeholder="name"
-            ref={name => {
+            ref={(name) => {
               this.name = name;
             }}
           />
           <input
             className="btn-sp"
             placeholder="phone"
-            ref={phone => {
+            ref={(phone) => {
               this.phone = phone;
             }}
           />
           <input
             className="btn-sp"
             placeholder="address"
-            ref={address => {
+            ref={(address) => {
               this.address = address;
             }}
           />
